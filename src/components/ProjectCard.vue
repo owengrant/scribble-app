@@ -7,7 +7,7 @@
     <q-card-section>
         <div class="text-subtitle1">{{ project.description }}</div>
     </q-card-section>
-
+    <q-space />
     <q-separator />
 
     <q-card-actions align="right">

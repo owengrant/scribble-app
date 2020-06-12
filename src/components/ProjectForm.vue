@@ -8,7 +8,7 @@
             <q-form class="q-gutter-md">
                 <q-input clearable outlined v-model="projectPost.name" label="Project Name" />
                 <q-input type="textarea" clearable outlined v-model="projectPost.description" label="Project Description" />
-                <q-toggle v-model="completed" label="Mark project as completed" />
+                <q-toggle v-show="edit" v-model="completed" label="Mark project as completed" />
                 <q-separator/>
                 <div> 
                     <q-btn class="q-mr-xs" color="primary" @click="create">Create</q-btn>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
 import { ProjectApi } from './../openapi/api'
 
@@ -29,6 +29,7 @@ import { ProjectPost } from '../openapi'
 
 @Component
 export default class ProjectForm extends Vue {
+    @Prop(Boolean) readonly edit: boolean = false
     projectApi = new ProjectApi()
     projectPost: ProjectPost = {
         name: '',
