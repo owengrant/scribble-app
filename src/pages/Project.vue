@@ -28,6 +28,9 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+
+import { ProjectApi } from './../openapi/api'
+
 import ProjectCard  from './../components/ProjectCard.vue'
 import ProjectForm  from './../components/ProjectForm.vue'
 

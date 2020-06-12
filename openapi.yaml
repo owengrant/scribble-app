@@ -1,0 +1,130 @@
+---
+openapi: 3.0.1
+info:
+  title: Scribble API
+  contact:
+    name: Owen Grant
+    email: owen.dalmon.grant.@gmail.com
+  version: 1.0.0
+tags:
+- name: Project
+paths:
+  /api/v1/projects:
+    get:
+      tags:
+      - Project
+      operationId: readProjects
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      tags:
+      - Project
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectPost'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/v1/projects/{id}:
+    get:
+      tags:
+      - Project
+      operationId: readProject
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    put:
+      tags:
+      - Project
+      operationId: updateProject
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectPut'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      tags:
+      - Project
+      operationId: deleteProject
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    ProjectPost:
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+    Project:
+      type: object
+      properties:
+        completed:
+          type: boolean
+        description:
+          pattern: \S
+          type: string
+          nullable: false
+        id:
+          format: int64
+          type: integer
+        name:
+          pattern: \S
+          type: string
+          nullable: false
+    ProjectPut:
+      type: object
+      properties:
+        completed:
+          type: boolean
+        description:
+          type: string
+        name:
+          type: string
