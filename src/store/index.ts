@@ -1,5 +1,6 @@
 import { store } from 'quasar/wrappers';
 import Vuex from 'vuex';
+import ProjectModule from './project'
 
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
@@ -21,7 +22,7 @@ export default store(function ({ Vue }) {
 
   const Store = new Vuex.Store<StoreInterface>({
     modules: {
-      // example
+      project: ProjectModule
     },
 
     // enable strict mode (adds overhead!)

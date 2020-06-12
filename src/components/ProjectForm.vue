@@ -6,12 +6,12 @@
         </q-toolbar>
         <q-card-section>
             <q-form class="q-gutter-md">
-                <q-input clearable outlined v-model="name" label="Project Name" />
-                <q-input type="textarea" clearable outlined v-model="description" label="Project Description" />
+                <q-input clearable outlined v-model="projectPost.name" label="Project Name" />
+                <q-input type="textarea" clearable outlined v-model="projectPost.description" label="Project Description" />
                 <q-toggle v-model="completed" label="Mark project as completed" />
                 <q-separator/>
                 <div> 
-                    <q-btn class="q-mr-xs" color="primary">Create</q-btn>
+                    <q-btn class="q-mr-xs" color="primary" @click="create">Create</q-btn>
                     <q-btn flat color="negative">Reset</q-btn>
                 </div>
             </q-form>
@@ -22,12 +22,25 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 
+import { ProjectApi } from './../openapi/api'
+
+import { ProjectPost } from '../openapi'
+ 
 
 @Component
 export default class ProjectForm extends Vue {
-    name = ""
-    description = ""
+    projectApi = new ProjectApi()
+    projectPost: ProjectPost = {
+        name: '',
+        description: ''
+    }
     completed = false
+
+    async create() {
+        const response = await this.projectApi.createProject(this.projectPost)
+        this.$store.commit('project/addProject', response.data)
+    }
+
 }
 </script>
 

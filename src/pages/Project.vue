@@ -16,8 +16,9 @@
     <div class="row justify-center">
       <project-card 
        class="col-xs-3 q-ma-md" 
-       v-for="(i, v) in projects"
+       v-for="(project, i) in $store.state.project.projects"
        :key="i"
+       :project="project"
       />
     </div>
     <q-dialog v-model="showCreate" persistent transition-show="flip-down" transition-hide="flip-up">
@@ -41,10 +42,15 @@ import ProjectForm  from './../components/ProjectForm.vue'
   }
 })
 export default class Project extends Vue {
+  projectApi = new ProjectApi()
   showCreate = false
   filter = ''
-  projects = [1]    
+  projects = new Array<Project>()    
   
+  async mounted() {
+    const response = await this.projectApi.readProjects()
+    this.$store.commit('project/replaceProjects', response.data)
+  }
 
 }
 </script>

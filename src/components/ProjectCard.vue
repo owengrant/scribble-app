@@ -1,11 +1,11 @@
 <template>
   <q-card >
     <q-card-section class="bg-primary text-white">
-      <div class="text-h6">Project Name</div>
+      <div class="text-h6">{{ project.name }}</div>
       <div class="text-subtitile2">Project Status</div>    
     </q-card-section>
     <q-card-section>
-        <div class="text-subtitle1"> Project Description</div>
+        <div class="text-subtitle1">{{ project.description }}</div>
     </q-card-section>
 
     <q-separator />
@@ -19,11 +19,17 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+
+import { Project } from './../openapi'
 
 @Component
 export default class ProjectCard extends Vue {
-  
+  @Prop(Object) readonly project: Project | undefined
+
+  mounted() {
+    console.log(this.project)
+  }
 
 }
 </script>
