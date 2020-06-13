@@ -22,6 +22,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 
 import { ProjectApi, Project } from './../openapi'
+import notify from '../NotifyUtil';
 
 @Component
 export default class ProjectCard extends Vue {
@@ -30,9 +31,25 @@ export default class ProjectCard extends Vue {
  
   async deleteProject() {
     if(this.project) {
+      const name = this.project.name
       const id = Number(this.project.id)
-      const response = await this.projectApi.deleteProject(id)
-      this.$store.commit('project/deleteProject', {id: id})
+      this.$q.dialog({
+        title: 'Delete Project - '+name,
+        message: 'Are you sure you want to delete this project and all associated resources?\nThis action cannot be undone.',
+        cancel: true,
+        persistent: true,
+        
+      }).onOk(() => {
+        notify(
+          'Scribbling',
+          'Deleting Project - '+name,
+          'warning',
+          async () => {
+            const response = await this.projectApi.deleteProject(id)
+            this.$store.commit('project/deleteProject', {id: id})
+          }
+        )
+      })
     }
   }
 

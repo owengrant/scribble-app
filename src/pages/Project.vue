@@ -34,6 +34,7 @@ import { ProjectApi } from './../openapi/api'
 
 import ProjectCard  from './../components/ProjectCard.vue'
 import ProjectForm  from './../components/ProjectForm.vue'
+import notify from '../NotifyUtil';
 
 @Component({
   components: {
@@ -48,8 +49,10 @@ export default class Project extends Vue {
   projects = new Array<Project>()    
   
   async mounted() {
-    const response = await this.projectApi.readProjects()
-    this.$store.commit('project/replaceProjects', response.data)
+    notify("Please with while we gather your Scribbles", "Loading Projects", "info", async () => {
+      const response = await this.projectApi.readProjects()
+      this.$store.commit('project/replaceProjects', response.data)
+    })
   }
 
 }

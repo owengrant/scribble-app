@@ -11,7 +11,7 @@
                 <q-toggle v-show="edit" v-model="completed" label="Mark project as completed" />
                 <q-separator/>
                 <div> 
-                    <q-btn class="q-mr-xs" color="primary" @click="create">Create</q-btn>
+                    <q-btn class="q-mr-xs" color="primary" @click="create" v-close-popup>Create</q-btn>
                     <q-btn flat color="negative">Reset</q-btn>
                 </div>
             </q-form>
@@ -21,6 +21,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
+
+import notify from '../NotifyUtil'
 
 import { ProjectApi } from './../openapi/api'
 
@@ -38,8 +40,10 @@ export default class ProjectForm extends Vue {
     completed = false
 
     async create() {
-        const response = await this.projectApi.createProject(this.projectPost)
-        this.$store.commit('project/addProject', response.data)
+        notify('Scribbling', "Creating Project - "+this.projectPost.name, "info", async () => {
+            const response = await this.projectApi.createProject(this.projectPost)
+            this.$store.commit('project/addProject', response.data)
+        });
     }
 
 }
