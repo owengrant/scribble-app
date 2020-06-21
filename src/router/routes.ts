@@ -9,8 +9,13 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     component: () => import('layouts/Main.vue'),
-    children: [{ path: '', component: () => import('pages/Project.vue') }]
-  }
+    children: [
+      { path: '', name: "root", component: () => import('pages/Project.vue') },
+      { path: 'projects/:id/edit', name: "editProject", component: () => import('pages/Project.vue') },
+      { path: 'projects/create', name: "createProject", component: () => import('pages/Project.vue') },
+      { path: 'projects/reload', name: "refreshProject", component: () => import('pages/Project.vue') }
+    ]
+  },
 ];
 
 // Always leave this as last one

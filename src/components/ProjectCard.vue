@@ -12,7 +12,7 @@
 
     <q-card-actions align="right">
       <q-btn flat color="positive">Scribble</q-btn>
-      <q-btn flat color="primary">Edit</q-btn>
+      <q-btn flat color="primary" @click="edit">Edit</q-btn>
       <q-btn flat color="negative" @click="deleteProject">Delete</q-btn>
     </q-card-actions>
   </q-card>
@@ -29,6 +29,13 @@ export default class ProjectCard extends Vue {
   @Prop(Object) readonly project: Project | undefined
   projectApi = new ProjectApi()
  
+  edit() {
+    if(this.project) {
+      const id = Number(this.project.id)
+      this.$router.replace("/projects/"+id+"/edit")
+    }
+  }
+
   async deleteProject() {
     if(this.project) {
       const name = this.project.name

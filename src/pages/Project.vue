@@ -2,7 +2,7 @@
   <q-page>
     <div class="row">
       <div class="col-xs-2 text-right q-mt-lg">
-        <q-btn  fab icon="add" color="positive" label="Create" @click="showCreate = true"/>
+        <q-btn  fab icon="add" color="positive" label="Create" @click="$router.replace('/projects/create')"/>
       </div>
       <div class="q-mt-lg q-mb-md offset-xs-1 col-xs-6">
         <q-input v-model="filter" label="Search">
@@ -24,11 +24,15 @@
     <q-dialog v-model="showCreate" persistent transition-show="flip-down" transition-hide="flip-up">
       <project-form style="width: 600px"/>
     </q-dialog>
+    <q-dialog v-model="showEdit" persistent transition-show="flip-down" transition-hide="flip-up">
+      <project-form :edit="true" style="width: 600px"/>
+    </q-dialog>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Route } from 'vue-router';
 
 import { ProjectApi } from './../openapi/api'
 
@@ -45,14 +49,42 @@ import notify from '../NotifyUtil';
 export default class Project extends Vue {
   projectApi = new ProjectApi()
   showCreate = false
+  showEdit = false
   filter = ''
   projects = new Array<Project>()    
   
+  @Watch('$route', { immediate: true, deep: true })
+  router(route: Route) {
+    if(route.name == 'createProject') {
+      this.showCreate = true
+    }
+    else if(route.name == 'editProject') {
+      const id = route.params.id
+      this.showEdit = true
+    }
+    else if(route.name == 'refreshProject') {
+      this.refresh()
+      this.$router.replace("/")
+    }
+    else if(route.name == 'root') {
+      this.showCreate = false
+      this.showEdit = false
+    }
+  }
+  
   async mounted() {
+    this.refresh();
+  }
+
+  async refresh() {
     notify("Please with while we gather your Scribbles", "Loading Projects", "info", async () => {
       const response = await this.projectApi.readProjects()
       this.$store.commit('project/replaceProjects', response.data)
     })
+  }
+
+  destroy() {
+
   }
 
 }
