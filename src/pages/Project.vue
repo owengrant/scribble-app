@@ -5,7 +5,7 @@
         <q-btn  fab icon="add" color="positive" label="Create" @click="$router.replace('/projects/create')"/>
       </div>
       <div class="q-mt-lg q-mb-md offset-xs-1 col-xs-6">
-        <q-input v-model="filter" label="Search">
+        <q-input v-model="filter" label="Filter" outlined>
           <template v-slot:append>
             <q-icon v-if="filter === ''" name="search" />
             <q-icon v-else name="clear" class="cursor-pointer" @click="filter = ''" />
