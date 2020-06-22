@@ -7,7 +7,7 @@
       <div class="q-mt-lg q-mb-md offset-xs-1 col-xs-6">
         <q-input v-model="filter" label="Filter" outlined>
           <template v-slot:append>
-            <q-icon v-if="filter === ''" name="search" />
+            <q-icon v-if="filter === ''" name="search" @keyup.enter="search"/>
             <q-icon v-else name="clear" class="cursor-pointer" @click="filter = ''" />
           </template>
         </q-input>
@@ -16,7 +16,7 @@
     <div class="row justify-center">
       <project-card 
        class="col-xs-3 q-ma-md" 
-       v-for="(project, i) in $store.state.project.projects"
+       v-for="(project, i) in projectList"
        :key="i"
        :project="project"
       />
@@ -34,7 +34,7 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { Route } from 'vue-router';
 
-import { ProjectApi } from './../openapi/api'
+import { ProjectApi, Project as ProjectGet } from './../openapi/api'
 
 import ProjectCard  from './../components/ProjectCard.vue'
 import ProjectForm  from './../components/ProjectForm.vue'
@@ -50,8 +50,7 @@ export default class Project extends Vue {
   projectApi = new ProjectApi()
   showCreate = false
   showEdit = false
-  filter = ''
-  projects = new Array<Project>()    
+  filter = ''  
   
   @Watch('$route', { immediate: true, deep: true })
   router(route: Route) {
@@ -63,7 +62,7 @@ export default class Project extends Vue {
       this.showEdit = true
     }
     else if(route.name == 'refreshProject') {
-      this.refresh()
+      // this.refresh()
       this.$router.replace("/")
     }
     else if(route.name == 'root') {
@@ -83,8 +82,13 @@ export default class Project extends Vue {
     })
   }
 
-  destroy() {
-
+  get projectList() {
+    const projects = this.$store.state.project.projects
+    const filter = this.filter.toLowerCase().trim()
+    if(filter.length == 0) return projects
+    else return projects.filter(
+      (pro: ProjectGet)=> (pro.name && pro.name.toLowerCase().includes(filter)) || (pro.description && pro.description.toLowerCase().includes(filter))
+    )
   }
 
 }
